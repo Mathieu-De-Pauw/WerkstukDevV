@@ -1,28 +1,12 @@
+const {Thee} = require('../models/thee')
+const {Soort} = require('../models/soort');
+const {soortSchema} = require('../models/soort');
 const mongoose = require('mongoose');
 const express = require('express');
-const {soortSchema} = require('./soorten');
-const {Soort} = require('./soorten');
 const { generateKeyPair } = require('crypto');
 const router = express.Router();
 
-const Thee = mongoose.model('Thees', new mongoose.Schema({
-    naam: {
-        type:String,
-        required: true,
-        trim: true,
-        maxlength: 50
-    },
-    soort: {
-        type: soortSchema,
-        required: true
-    },
-    smaak: [ String ],
-    date: { type: Date, default: Date.now},
-    isBeschikbaar: {
-        type: Boolean,
-        default: false
-    }
-})); 
+//console.log(soortSchema);
 
 router.get("/", async (req,res) => {
     const thees = await Thee.find().sort('naam');
@@ -31,7 +15,7 @@ router.get("/", async (req,res) => {
 
 router.post('/', async (req,res) => {
 
-    const soort = await Soort.findById(req.body.id);
+    const soort = await Soort.findById(req.body.soortId);
     if(!soort) return res.status(400).send("Geen geldige soort thee");
 
     let thee = new Thee({ 
